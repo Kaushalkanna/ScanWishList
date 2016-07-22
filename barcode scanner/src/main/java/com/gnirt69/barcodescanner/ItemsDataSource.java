@@ -16,10 +16,12 @@ public class ItemsDataSource {
     private SQLiteDatabase database;
     private MySQLiteHelper dbHelper;
     private String[] allColumns = {
-            MySQLiteHelper.COLUMN_ID,
             MySQLiteHelper.COLUMN_UPC,
             MySQLiteHelper.COLUMN_NAME,
-            MySQLiteHelper.COLUMN_PRICE
+            MySQLiteHelper.COLUMN_PRICE,
+            MySQLiteHelper.COLUMN_IMAGEURL,
+            MySQLiteHelper.COLUMN_PRODUCTURL,
+            MySQLiteHelper.COLUMN_STORENAME,
     };
 
     public ItemsDataSource(Context context) {
@@ -34,15 +36,18 @@ public class ItemsDataSource {
         dbHelper.close();
     }
 
-    public Item createItem(String upc, String name, String price) {
+    public Item createItem(String upc, String name, String price, String imageurl, String producturl, String storename) {
         ContentValues values = new ContentValues();
         values.put(MySQLiteHelper.COLUMN_UPC, upc);
         values.put(MySQLiteHelper.COLUMN_NAME, name);
         values.put(MySQLiteHelper.COLUMN_PRICE, price);
+        values.put(MySQLiteHelper.COLUMN_IMAGEURL, imageurl);
+        values.put(MySQLiteHelper.COLUMN_PRODUCTURL, producturl);
+        values.put(MySQLiteHelper.COLUMN_STORENAME, storename);
         long insertId = database.insert(MySQLiteHelper.TABLE_ITEMS, null,
                 values);
         Cursor cursor = database.query(MySQLiteHelper.TABLE_ITEMS,
-                allColumns, MySQLiteHelper.COLUMN_ID + " = " + insertId, null,
+                allColumns, "" + insertId, null,
                 null, null, null);
         cursor.moveToFirst();
         Item newItem = cursorToItem(cursor);
@@ -53,7 +58,7 @@ public class ItemsDataSource {
     public void deleteItem(Item item) {
         String UPC = item.getUPC();
         System.out.println("Item deleted with id: " + UPC);
-        database.delete(MySQLiteHelper.TABLE_ITEMS, MySQLiteHelper.COLUMN_ID
+        database.delete(MySQLiteHelper.TABLE_ITEMS, MySQLiteHelper.COLUMN_UPC
                 + " = " + UPC, null);
     }
 
@@ -76,10 +81,12 @@ public class ItemsDataSource {
 
     private Item cursorToItem(Cursor cursor) {
         Item item = new Item();
-        item.setId(cursor.getLong(0));
-        item.setUPC(cursor.getString(1));
-        item.setName(cursor.getString(2));
-        item.setPrice(cursor.getString(3));
+        item.setUPC(cursor.getString(0));
+        item.setName(cursor.getString(1));
+        item.setPrice(cursor.getString(2));
+        item.setImageUrl(cursor.getString(3));
+        item.setProductUrl(cursor.getString(4));
+        item.setStoreName(cursor.getString(5));
         return item;
     }
 }

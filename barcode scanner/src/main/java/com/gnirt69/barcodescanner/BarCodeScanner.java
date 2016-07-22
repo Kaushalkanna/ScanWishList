@@ -27,6 +27,9 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     public String upc;
     public String name;
     public String price;
+    public String imageurl;
+    public String producturl;
+    public String storename;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,9 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
 
                             name = data.getString("productname");
                             price = data.getString("currency") + data.getString("price");
+                            imageurl = data.getString("imageurl");
+                            producturl = data.getString("producturl");
+                            storename = data.getString("storename");
                             Log.w("info", name + price);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -101,7 +107,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                 "\nAdd to Wish List?").setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        datasource.createItem(upc, name, price);
+                        datasource.createItem(upc, name, price, imageurl, producturl, storename);
                         createToast(dialog);
                         dialog.cancel();
                     }

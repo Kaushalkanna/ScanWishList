@@ -1,18 +1,12 @@
 package com.gnirt69.barcodescanner;
 
 public class Item {
-    private long id;
     private String upc;
     private String name;
     private String price;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+    private String imageurl;
+    private String producturl;
+    private String storename;
 
     public String getUPC() {
         return upc;
@@ -38,7 +32,31 @@ public class Item {
         this.price = price;
     }
 
-    // Will be used by the ArrayAdapter in the ListView
+    public String getImageUrl() {
+        return imageurl;
+    }
+
+    public void setImageUrl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
+    public String getProductUrl() {
+        return producturl;
+    }
+
+    public void setProductUrl(String producturl) {
+        this.producturl = producturl;
+    }
+
+    public String getStoreName() {
+        return storename;
+    }
+
+    public void setStoreName(String storename) {
+        this.storename = storename;
+    }
+
+
     @Override
     public String toString() {
         return name;
