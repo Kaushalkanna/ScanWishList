@@ -2,14 +2,17 @@ package com.gnirt69.barcodescanner;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -117,34 +120,53 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
 
     private void showDialog() {
         Drawable drawable = getImage();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setIcon(R.mipmap.ic_launcher);
-        builder.setTitle("Scan result");
-        builder.setMessage("UPC = " + upc +
-                "\n\nName = " + name +
-                "\n\nprice = " + price +
-                "\n\nStore name = " + storename +
-                "\n\nAdd to Wish List?").setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        datasource.createItem(upc, name, price, imageurl, producturl, storename);
-                        createToast();
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.alert_box);
+        dialog.setTitle("Details");
+        TextView productName = (TextView) dialog.findViewById(R.id.productname);
+        TextView priceField = (TextView) dialog.findViewById(R.id.price);
+        TextView upcCode = (TextView) dialog.findViewById(R.id.upc);
+        TextView storeName = (TextView) dialog.findViewById(R.id.storename);
+        ImageView image = (ImageView) dialog.findViewById(R.id.imageView);
+
+
+
+        productName.setText(name);
+        priceField.setText(price);
+        upcCode.setText(upc);
+        storeName.setText(storename);
+        try{
+            URL url = new URL("http://www.cnmuqi.com/data/out/22/random-picture-8193585.jpg");
+            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            image.setImageBitmap(bmp);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
+        Button dialogYes = (Button) dialog.findViewById(R.id.yes);
+        Button dialogNo = (Button) dialog.findViewById(R.id.no);
+
+        dialogYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datasource.createItem(upc, name, price, imageurl, producturl, storename);
+                createToast();
+                dialog.dismiss();
+            }
+        });
+        dialogNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
 
     private Drawable getImage() {
         Drawable drawable = null;
-
         try {
 
             URL newurl = new URL(imageurl);
