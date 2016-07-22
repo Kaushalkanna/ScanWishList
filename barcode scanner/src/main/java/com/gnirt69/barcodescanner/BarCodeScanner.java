@@ -4,6 +4,10 @@ package com.gnirt69.barcodescanner;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -18,6 +22,8 @@ import com.google.zxing.Result;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URL;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -56,7 +62,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
         datasource.close();
     }
@@ -71,7 +77,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
 
         httpRequest(url);
         if (name != null) {
-            alertBox();
+            showDialog();
         }
         mScannerView.resumeCameraPreview(this);
     }
@@ -86,7 +92,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                             JSONObject data = response.getJSONObject("0");
 
                             name = data.getString("productname");
-                            price = data.getString("currency") + " " +data.getString("price");
+                            price = data.getString("currency") + " " + data.getString("price");
                             imageurl = data.getString("imageurl");
                             producturl = data.getString("producturl");
                             storename = data.getString("storename");
@@ -109,8 +115,10 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     }
 
 
-    private void alertBox() {
+    private void showDialog() {
+        Drawable drawable = getImage();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.mipmap.ic_launcher);
         builder.setTitle("Scan result");
         builder.setMessage("UPC = " + upc +
                 "\n\nName = " + name +
@@ -120,7 +128,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         datasource.createItem(upc, name, price, imageurl, producturl, storename);
-                        createToast(dialog);
+                        createToast();
                         dialog.cancel();
                     }
                 })
@@ -133,7 +141,22 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
         alertDialog.show();
     }
 
-    private void createToast(DialogInterface dialog) {
+
+    private Drawable getImage() {
+        Drawable drawable = null;
+
+        try {
+
+            URL newurl = new URL(imageurl);
+            Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+            drawable = new BitmapDrawable(getResources(), mIcon_val);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return drawable;
+    }
+
+    private void createToast() {
         Toast.makeText(
                 getApplicationContext(),
                 "item :" + upc + " added to wishlist ",
