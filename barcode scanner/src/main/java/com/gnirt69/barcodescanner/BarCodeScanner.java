@@ -47,6 +47,17 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     protected void onPause() {
         super.onPause();
         mScannerView.stopCamera();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mScannerView.resumeCameraPreview(this);
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
         datasource.close();
     }
 
@@ -75,7 +86,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                             JSONObject data = response.getJSONObject("0");
 
                             name = data.getString("productname");
-                            price = data.getString("currency") + data.getString("price");
+                            price = data.getString("currency") + " " +data.getString("price");
                             imageurl = data.getString("imageurl");
                             producturl = data.getString("producturl");
                             storename = data.getString("storename");
@@ -102,9 +113,10 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Scan result");
         builder.setMessage("UPC = " + upc +
-                "\nName = " + name +
-                "\nprice = " + price +
-                "\nAdd to Wish List?").setCancelable(false)
+                "\n\nName = " + name +
+                "\n\nprice = " + price +
+                "\n\nStore name = " + storename +
+                "\n\nAdd to Wish List?").setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         datasource.createItem(upc, name, price, imageurl, producturl, storename);
