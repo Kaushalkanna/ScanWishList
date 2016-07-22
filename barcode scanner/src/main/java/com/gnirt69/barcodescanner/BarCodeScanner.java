@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -17,6 +16,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.zxing.Result;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -24,42 +24,47 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class BarCodeScanner extends Activity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private ItemsDataSource datasource;
-    private TextView txtResponse;
+    public String name;
+    public String price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.barcode_scanner);
-
-        txtResponse = (TextView) findViewById(R.id.txtResponse);
         mScannerView = new ZXingScannerView(this);
         setContentView(mScannerView);
         mScannerView.setResultHandler(this);
         mScannerView.startCamera();
         datasource = new ItemsDataSource(this);
         datasource.open();
-
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         mScannerView.stopCamera();
+        datasource.close();
     }
 
     @Override
     public void handleResult(final Result result) {
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&access_token=C4D521E6-37BA-4F33-AF34-5AD38AA318C8&upc=" + result.getText();
-        String name = "hello";
-        String price = "0";
         Log.w("handleResult", result.getText());
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        txtResponse.setText(response.toString());
+                        try {
+                            JSONObject data = response.getJSONObject("0");
+
+                            name = data.getString("productname");
+                            price = data.getString("currency") + data.getString("price");
+                            Log.w("info", name + price);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 },
                 new Response.ErrorListener() {
@@ -70,8 +75,10 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                 }
         );
         queue.add(jsonObjReq);
-        Log.w("Name", txtResponse.getText().toString());
-        alertBox(result, name, price);
+        if (name != null) {
+            alertBox(result, name, price);
+        }
+
         mScannerView.resumeCameraPreview(this);
     }
 
