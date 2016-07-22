@@ -119,6 +119,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
 
 
     private void showDialog() {
+        String imageURL = "http://www.cnmuqi.com/data/out/22/random-picture-8193585.jpg";
         Drawable drawable = getImage();
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_box);
@@ -135,13 +136,14 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
         priceField.setText(price);
         upcCode.setText(upc);
         storeName.setText(storename);
-        try{
-            URL url = new URL("http://www.cnmuqi.com/data/out/22/random-picture-8193585.jpg");
-            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-            image.setImageBitmap(bmp);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+//        try{
+//            URL url = new URL("http://www.cnmuqi.com/data/out/22/random-picture-8193585.jpg");
+//            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//            image.setImageBitmap(bmp);
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+        new DownloadImageTask(image).execute(imageURL);
 
 
         Button dialogYes = (Button) dialog.findViewById(R.id.yes);
@@ -151,7 +153,8 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
             @Override
             public void onClick(View v) {
                 datasource.createItem(upc, name, price, imageurl, producturl, storename);
-                createToast();
+                Toast.makeText(getApplicationContext(), "item :" + name + " added to wishlist ",
+                        Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -176,13 +179,6 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
             e.printStackTrace();
         }
         return drawable;
-    }
-
-    private void createToast() {
-        Toast.makeText(
-                getApplicationContext(),
-                "item :" + upc + " added to wishlist ",
-                Toast.LENGTH_SHORT).show();
     }
 
 }
