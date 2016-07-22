@@ -24,6 +24,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class BarCodeScanner extends Activity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private ItemsDataSource datasource;
+    public String upc;
     public String name;
     public String price;
 
@@ -48,10 +49,21 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
 
     @Override
     public void handleResult(final Result result) {
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&access_token=C4D521E6-37BA-4F33-AF34-5AD38AA318C8&upc=" + result.getText();
+        upc = result.getText();
         Log.w("handleResult", result.getText());
+        String url = "http://www.searchupc.com/handlers/upcsearch.ashx?" +
+                "request_type=3&access_token=C4D521E6-37BA-4F33-AF34-5AD38AA318C8&upc="
+                + result.getText();
 
+        httpRequest(url);
+        if (name != null) {
+            alertBox();
+        }
+        mScannerView.resumeCameraPreview(this);
+    }
+
+    private void httpRequest(String url) {
+        RequestQueue queue = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -74,25 +86,23 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                     }
                 }
         );
-        queue.add(jsonObjReq);
-        if (name != null) {
-            alertBox(result, name, price);
+        if (name == null) {
+            queue.add(jsonObjReq);
         }
-
-        mScannerView.resumeCameraPreview(this);
     }
 
-    private void alertBox(final Result result, final String name, final String price) {
+
+    private void alertBox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Scan result");
-        builder.setMessage("UPC = " + result.getText() +
+        builder.setMessage("UPC = " + upc +
                 "\nName = " + name +
                 "\nprice = " + price +
                 "\nAdd to Wish List?").setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        datasource.createItem(result.getText(), name, price);
-                        createToast(dialog, result);
+                        datasource.createItem(upc, name, price);
+                        createToast(dialog);
                         dialog.cancel();
                     }
                 })
@@ -105,10 +115,10 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
         alertDialog.show();
     }
 
-    private void createToast(DialogInterface dialog, Result result) {
+    private void createToast(DialogInterface dialog) {
         Toast.makeText(
                 getApplicationContext(),
-                "item :" + result.getText() + " added to wishlist ",
+                "item :" + upc + " added to wishlist ",
                 Toast.LENGTH_SHORT).show();
     }
 
