@@ -63,13 +63,18 @@ public class CustomAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 String url = result.get(position).getProductUrl();
-                Toast.makeText(context,url,Toast.LENGTH_SHORT).show();
+                String toastText;
                 if (url!= null &&!url.equals("") && !url.equals("N/A")) {
+                    toastText = "opening "+url+" in browser";
                     if (!url.startsWith("http://") && !url.startsWith("https://"))
                         url = "http://" + url;
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    context.startActivity(browserIntent);
+                }else{
+                    toastText = "URL not found. Searching for product in google";
+                    url = "https://www.google.com/#tbm=shop&q=" + result.get(position).getUPC();
                 }
+                Toast.makeText(context,toastText,Toast.LENGTH_SHORT).show();
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                context.startActivity(browserIntent);
             }
         });
         rowView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -82,7 +87,7 @@ public class CustomAdapter extends BaseAdapter {
                 adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         datasource.deleteItem(result.get(position));
-//                        this.notifyDataSetChanged();
+//                        context.notifyDataSetChanged();
                         Toast.makeText(context,"I am the one",Toast.LENGTH_SHORT).show();
                     }});
                 adb.show();
