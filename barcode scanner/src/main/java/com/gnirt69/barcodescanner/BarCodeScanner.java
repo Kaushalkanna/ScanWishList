@@ -73,11 +73,9 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     @Override
     public void handleResult(final Result result) {
         upc = result.getText();
-        Log.w("handleResult", result.getText());
         String url = "http://www.searchupc.com/handlers/upcsearch.ashx?" +
                 "request_type=3&access_token=C4D521E6-37BA-4F33-AF34-5AD38AA318C8&upc="
                 + result.getText();
-
         httpRequest(url);
         if (name != null) {
             showDialog();
@@ -131,7 +129,6 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
         ImageView image = (ImageView) dialog.findViewById(R.id.imageView);
 
 
-
         productName.setText(name);
         priceField.setText(price);
         upcCode.setText(upc);
@@ -143,7 +140,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
 //        }catch(Exception e){
 //            e.printStackTrace();
 //        }
-        new DownloadImageTask(image).execute(imageURL);
+//        new DownloadImageTask(image).execute(imageURL);
 
 
         Button dialogYes = (Button) dialog.findViewById(R.id.yes);

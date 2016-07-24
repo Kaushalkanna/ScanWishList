@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:layout_weight="0.29"
-        android:layout_gravity="left|top" />
+        android:layout_gravity="left|top"
+        android:src="@mipmap/ic_launcher"/>
 
 
     <TextView
