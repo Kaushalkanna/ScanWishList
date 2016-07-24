@@ -5,6 +5,7 @@ package com.gnirt69.barcodescanner;
  */
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -15,18 +16,22 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlertDialog;
 
 import java.util.List;
 
 public class CustomAdapter extends BaseAdapter {
     List<Item> result;
     Context context;
+    ItemsDataSource datasource;
     private static LayoutInflater inflater = null;
 
     public CustomAdapter(ListViewAndroid activity, List<Item> values) {
         result = values;
         context = activity;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        datasource = new ItemsDataSource(context);
+        datasource.open();
     }
 
     @Override
@@ -65,6 +70,23 @@ public class CustomAdapter extends BaseAdapter {
                     Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     context.startActivity(browserIntent);
                 }
+            }
+        });
+        rowView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder adb=new AlertDialog.Builder(context);
+                adb.setTitle("Delete?");
+                adb.setMessage("Are you sure you want to delete " + result.get(position).getName());
+                adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        datasource.deleteItem(result.get(position));
+//                        this.notifyDataSetChanged();
+                        Toast.makeText(context,"I am the one",Toast.LENGTH_SHORT).show();
+                    }});
+                adb.show();
+                return true;
             }
         });
         return rowView;
