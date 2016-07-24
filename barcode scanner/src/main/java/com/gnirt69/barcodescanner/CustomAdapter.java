@@ -12,6 +12,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import java.util.List;
 
 public class CustomAdapter extends BaseAdapter {
@@ -45,6 +47,7 @@ public class CustomAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        ImageLoader imageLoader = ImageLoader.getInstance();
         View rowView;
         rowView = inflater.inflate(R.layout.list_element, null);
         TextView listName = (TextView) rowView.findViewById(R.id.listName);
@@ -52,6 +55,7 @@ public class CustomAdapter extends BaseAdapter {
         ImageView listImage = (ImageView) rowView.findViewById(R.id.listImage);
         listName.setText(result.get(position).getName());
         listPrice.setText(result.get(position).getPrice());
+        imageLoader.displayImage(result.get(position).getImageUrl(), listImage);
         return rowView;
     }
 

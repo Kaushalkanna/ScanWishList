@@ -3,10 +3,6 @@ package com.gnirt69.barcodescanner;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,11 +18,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.zxing.Result;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.net.URL;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -91,7 +86,6 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                     public void onResponse(JSONObject response) {
                         try {
                             JSONObject data = response.getJSONObject("0");
-
                             name = data.getString("productname");
                             price = data.getString("currency") + " " + data.getString("price");
                             imageurl = data.getString("imageurl");
@@ -117,8 +111,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
 
 
     private void showDialog() {
-        String imageURL = "http://www.cnmuqi.com/data/out/22/random-picture-8193585.jpg";
-        Drawable drawable = getImage();
+        ImageLoader imageLoader = ImageLoader.getInstance();
         final Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.alert_box);
         dialog.setTitle("Details");
@@ -133,15 +126,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
         priceField.setText(price);
         upcCode.setText(upc);
         storeName.setText(storename);
-//        try{
-//            URL url = new URL("http://www.cnmuqi.com/data/out/22/random-picture-8193585.jpg");
-//            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//            image.setImageBitmap(bmp);
-//        }catch(Exception e){
-//            e.printStackTrace();
-//        }
-//        new DownloadImageTask(image).execute(imageURL);
-
+        imageLoader.displayImage(imageurl, image);
 
         Button dialogYes = (Button) dialog.findViewById(R.id.yes);
         Button dialogNo = (Button) dialog.findViewById(R.id.no);
@@ -162,20 +147,6 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
             }
         });
         dialog.show();
-    }
-
-
-    private Drawable getImage() {
-        Drawable drawable = null;
-        try {
-
-            URL newurl = new URL(imageurl);
-            Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
-            drawable = new BitmapDrawable(getResources(), mIcon_val);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return drawable;
     }
 
 }
