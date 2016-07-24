@@ -6,37 +6,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SCAN"
-            android:onClick="onClick"
-            android:id="@+id/scanbutton"
-            android:layout_marginBottom="61dp"
-            android:layout_above="@+id/listbutton"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Simple app to scan barcodes and save them to wishlist"
-            android:id="@+id/textView"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="119dp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wish List"
-            android:id="@+id/listbutton"
-            android:onClick="listView"
-            android:layout_marginBottom="54dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
+        android:layout_height="match_parent"
+        android:background="#dde4ed">
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,7 +17,39 @@
             android:id="@+id/textView2"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="33dp" />
+            android:layout_marginTop="47dp" />
+
+        <TextView
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Simple app to scan barcodes and save them to wishlist"
+            android:id="@+id/textView"
+            android:layout_marginTop="76dp"
+            android:layout_below="@+id/textView2"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="SCAN"
+            android:onClick="onClick"
+            android:id="@+id/scanbutton"
+            android:layout_marginBottom="36dp"
+            android:layout_above="@+id/listbutton"
+            android:layout_alignStart="@+id/listbutton" />
+
+        <Button
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="Wish List"
+            android:id="@+id/listbutton"
+            android:onClick="listView"
+            android:layout_marginBottom="68dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+
 
     </RelativeLayout>
 
