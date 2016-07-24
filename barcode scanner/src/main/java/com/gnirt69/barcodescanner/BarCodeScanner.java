@@ -2,10 +2,17 @@ package com.gnirt69.barcodescanner;
 
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Dialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -18,6 +25,8 @@ import com.google.zxing.Result;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.net.URL;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -56,7 +65,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     }
 
     @Override
-    protected void onStop(){
+    protected void onStop() {
         super.onStop();
         datasource.close();
     }
@@ -64,14 +73,12 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     @Override
     public void handleResult(final Result result) {
         upc = result.getText();
-        Log.w("handleResult", result.getText());
         String url = "http://www.searchupc.com/handlers/upcsearch.ashx?" +
                 "request_type=3&access_token=C4D521E6-37BA-4F33-AF34-5AD38AA318C8&upc="
                 + result.getText();
-
         httpRequest(url);
         if (name != null) {
-            alertBox();
+            showDialog();
         }
         mScannerView.resumeCameraPreview(this);
     }
@@ -86,7 +93,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                             JSONObject data = response.getJSONObject("0");
 
                             name = data.getString("productname");
-                            price = data.getString("currency") + " " +data.getString("price");
+                            price = data.getString("currency") + " " + data.getString("price");
                             imageurl = data.getString("imageurl");
                             producturl = data.getString("producturl");
                             storename = data.getString("storename");
@@ -109,35 +116,66 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     }
 
 
-    private void alertBox() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Scan result");
-        builder.setMessage("UPC = " + upc +
-                "\n\nName = " + name +
-                "\n\nprice = " + price +
-                "\n\nStore name = " + storename +
-                "\n\nAdd to Wish List?").setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        datasource.createItem(upc, name, price, imageurl, producturl, storename);
-                        createToast(dialog);
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    private void showDialog() {
+        String imageURL = "http://www.cnmuqi.com/data/out/22/random-picture-8193585.jpg";
+        Drawable drawable = getImage();
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.alert_box);
+        dialog.setTitle("Details");
+        TextView productName = (TextView) dialog.findViewById(R.id.productname);
+        TextView priceField = (TextView) dialog.findViewById(R.id.price);
+        TextView upcCode = (TextView) dialog.findViewById(R.id.upc);
+        TextView storeName = (TextView) dialog.findViewById(R.id.storename);
+        ImageView image = (ImageView) dialog.findViewById(R.id.imageView);
+
+
+        productName.setText(name);
+        priceField.setText(price);
+        upcCode.setText(upc);
+        storeName.setText(storename);
+//        try{
+//            URL url = new URL("http://www.cnmuqi.com/data/out/22/random-picture-8193585.jpg");
+//            Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+//            image.setImageBitmap(bmp);
+//        }catch(Exception e){
+//            e.printStackTrace();
+//        }
+//        new DownloadImageTask(image).execute(imageURL);
+
+
+        Button dialogYes = (Button) dialog.findViewById(R.id.yes);
+        Button dialogNo = (Button) dialog.findViewById(R.id.no);
+
+        dialogYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datasource.createItem(upc, name, price, imageurl, producturl, storename);
+                Toast.makeText(getApplicationContext(), "item :" + name + " added to wishlist ",
+                        Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        dialogNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
-    private void createToast(DialogInterface dialog) {
-        Toast.makeText(
-                getApplicationContext(),
-                "item :" + upc + " added to wishlist ",
-                Toast.LENGTH_SHORT).show();
+
+    private Drawable getImage() {
+        Drawable drawable = null;
+        try {
+
+            URL newurl = new URL(imageurl);
+            Bitmap mIcon_val = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+            drawable = new BitmapDrawable(getResources(), mIcon_val);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return drawable;
     }
 
 }

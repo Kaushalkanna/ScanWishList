@@ -56,9 +56,4 @@ public class Item {
         this.storename = storename;
     }
 
-
-    @Override
-    public String toString() {
-        return name;
-    }
 }
