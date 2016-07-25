@@ -57,9 +57,12 @@ public class ItemsDataSource {
 
     public void deleteItem(Item item) {
         String UPC = item.getUPC();
-        System.out.println("Item deleted with id: " + UPC);
         database.delete(MySQLiteHelper.TABLE_ITEMS, MySQLiteHelper.COLUMN_UPC
                 + " = " + UPC, null);
+    }
+
+    public void deleteAll(){
+        database.delete(MySQLiteHelper.TABLE_ITEMS, null, null);
     }
 
     public List<Item> getAllItems() {
@@ -74,7 +77,6 @@ public class ItemsDataSource {
             items.add(item);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
         cursor.close();
         return items;
     }

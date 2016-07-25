@@ -3,6 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete All"
+        android:id="@+id/deleteall"
+        android:layout_gravity="right"
+        android:onClick="deleteAllItems"/>
+
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"

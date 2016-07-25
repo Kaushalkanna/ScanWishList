@@ -34,6 +34,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     public String imageurl;
     public String producturl;
     public String storename;
+    public JSONObject data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +72,8 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
         String url = "http://www.searchupc.com/handlers/upcsearch.ashx?" +
                 "request_type=3&access_token=C4D521E6-37BA-4F33-AF34-5AD38AA318C8&upc="
                 + result.getText();
-        httpRequest(url);
-//        testSet();
+//        httpRequest(url);
+        testSet();
         if (name != null) {
             showDialog();
         }
@@ -94,13 +95,12 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            JSONObject data = response.getJSONObject("0");
+                            data = response.getJSONObject("0");
                             name = data.getString("productname");
                             price = data.getString("currency") + " " + data.getString("price");
                             imageurl = data.getString("imageurl");
                             producturl = data.getString("producturl");
                             storename = data.getString("storename");
-                            Log.w("info", name + price);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

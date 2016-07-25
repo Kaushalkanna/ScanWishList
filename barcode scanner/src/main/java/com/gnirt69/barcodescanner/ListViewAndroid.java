@@ -1,6 +1,7 @@
 package com.gnirt69.barcodescanner;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.app.AlertDialog;
 
 import java.util.List;
 
@@ -20,7 +20,6 @@ public class ListViewAndroid extends Activity {
     ItemsDataSource datasource;
     List<Item> values;
     Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +57,24 @@ public class ListViewAndroid extends Activity {
                 adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         datasource.deleteItem(values.get(position));
-                        adapter.notifyDataSetChanged();
-                        Toast.makeText(context,"Deleted " + values.get(position).getName(),Toast.LENGTH_SHORT).show();
+                        adapter.swapItems(datasource.getAllItems());
+                        Toast.makeText(context,"Deleted " + values.get(position).getUPC(),Toast.LENGTH_SHORT).show();
                     }});
                 adb.show();
                 return true;
             }
         });
+    }
+
+    public void deleteAllItems(View v){
+        Toast.makeText(this, "All Items Deleted", Toast.LENGTH_SHORT).show();
+        datasource.deleteAll();
+        adapter.swapItems(datasource.getAllItems());
+    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+        datasource.close();
     }
 
 }

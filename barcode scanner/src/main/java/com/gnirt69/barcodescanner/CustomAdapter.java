@@ -45,6 +45,11 @@ public class CustomAdapter extends BaseAdapter {
         return position;
     }
 
+    public void swapItems(List<Item> items) {
+        result = items;
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ImageLoader imageLoader = ImageLoader.getInstance();
