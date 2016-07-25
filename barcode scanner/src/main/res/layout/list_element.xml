@@ -25,12 +25,13 @@
         <TextView
             android:id="@+id/listName"
             android:layout_width="wrap_content"
-            android:layout_height="92dp"
+            android:layout_height="82dp"
             android:text="Item Details"
             android:scrollHorizontally="true"
             android:ellipsize="end"
             android:maxLines="4"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/listPrice"
@@ -38,6 +39,13 @@
             android:layout_height="20dp"
             android:text="Item Price"
             android:layout_marginTop="10dp"
+            android:textSize="15sp"/>
+        <TextView
+            android:id="@+id/listStore"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:text="Store Name"
+            android:layout_marginTop="5dp"
             android:textSize="15sp"/>
     </LinearLayout>
 

@@ -57,9 +57,11 @@ public class CustomAdapter extends BaseAdapter {
         rowView = inflater.inflate(R.layout.list_element, null);
         TextView listName = (TextView) rowView.findViewById(R.id.listName);
         TextView listPrice = (TextView) rowView.findViewById(R.id.listPrice);
+        TextView listStore = (TextView) rowView.findViewById(R.id.listStore);
         ImageView listImage = (ImageView) rowView.findViewById(R.id.listImage);
         listName.setText(result.get(position).getName());
         listPrice.setText(result.get(position).getPrice());
+        listStore.setText(result.get(position).getStoreName());
         imageLoader.displayImage(result.get(position).getImageUrl(), listImage);
         return rowView;
     }
