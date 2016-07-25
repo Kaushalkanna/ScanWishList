@@ -72,8 +72,8 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
         String url = "http://www.searchupc.com/handlers/upcsearch.ashx?" +
                 "request_type=3&access_token=C4D521E6-37BA-4F33-AF34-5AD38AA318C8&upc="
                 + result.getText();
-//        httpRequest(url);
-        testSet();
+        httpRequest(url);
+//        testSet();
         if (name != null) {
             showDialog();
         }
