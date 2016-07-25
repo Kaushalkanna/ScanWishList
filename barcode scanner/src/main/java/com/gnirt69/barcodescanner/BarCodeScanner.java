@@ -28,6 +28,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class BarCodeScanner extends Activity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private ItemsDataSource datasource;
+    private String url = "";
     public String upc;
     public String name;
     public String price;
@@ -69,9 +70,7 @@ public class BarCodeScanner extends Activity implements ZXingScannerView.ResultH
     @Override
     public void handleResult(final Result result) {
         upc = result.getText();
-        String url = "http://www.searchupc.com/handlers/upcsearch.ashx?" +
-                "request_type=3&access_token=C4D521E6-37BA-4F33-AF34-5AD38AA318C8&upc="
-                + result.getText();
+        url += upc;
         httpRequest(url);
 //        testSet();
         if (name != null) {
