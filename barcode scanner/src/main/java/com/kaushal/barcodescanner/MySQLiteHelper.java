@@ -1,4 +1,4 @@
-package com.gnirt69.barcodescanner;
+package com.kaushal.barcodescanner;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

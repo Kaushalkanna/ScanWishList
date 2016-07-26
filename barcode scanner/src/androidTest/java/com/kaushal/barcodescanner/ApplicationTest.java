@@ -1,4 +1,4 @@
-package com.gnirt69.barcodescanner;
+package com.kaushal.barcodescanner;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

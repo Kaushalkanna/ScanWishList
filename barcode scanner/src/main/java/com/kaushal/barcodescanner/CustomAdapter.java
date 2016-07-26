@@ -1,4 +1,4 @@
-package com.gnirt69.barcodescanner;
+package com.kaushal.barcodescanner;
 
 /**
  * Created by xkxd061 on 7/24/16.
@@ -65,5 +65,4 @@ public class CustomAdapter extends BaseAdapter {
         imageLoader.displayImage(result.get(position).getImageUrl(), listImage);
         return rowView;
     }
-
 }

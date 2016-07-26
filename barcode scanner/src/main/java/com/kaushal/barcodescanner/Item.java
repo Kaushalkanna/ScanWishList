@@ -1,4 +1,4 @@
-package com.gnirt69.barcodescanner;
+package com.kaushal.barcodescanner;
 
 public class Item {
     private String upc;

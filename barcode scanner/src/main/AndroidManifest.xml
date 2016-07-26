@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gnirt69.barcodescanner">
+    package="com.kaushal.barcodescanner">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,14 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.gnirt69.barcodescanner.MainActivity">
+        <activity android:name="com.kaushal.barcodescanner.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.gnirt69.barcodescanner.ListViewAndroid"></activity>
-        <activity android:name="com.gnirt69.barcodescanner.BarCodeScanner"></activity>
+        <activity android:name="com.kaushal.barcodescanner.ListViewAndroid"></activity>
+        <activity android:name="com.kaushal.barcodescanner.BarCodeScanner"></activity>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
