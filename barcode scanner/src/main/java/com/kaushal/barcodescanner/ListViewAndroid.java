@@ -36,7 +36,7 @@ public class ListViewAndroid extends Activity {
                 String url = values.get(position).getProductUrl();
                 String toastText;
                 if (url!= null &&!url.equals("") && !url.equals("N/A")) {
-                    toastText = "opening "+url+" in browser";
+                    toastText = "opening in browser";
                     if (!url.startsWith("http://") && !url.startsWith("https://"))
                         url = "http://" + url;
                 }else{
