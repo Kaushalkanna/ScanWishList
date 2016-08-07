@@ -10,7 +10,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-public class MainActivity extends Activity {
+public class ScanWishListActivity extends Activity {
     private GoogleApiClient client;
 
     @Override
